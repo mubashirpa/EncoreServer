@@ -1,12 +1,6 @@
 package com.encore.music.core
 
-object Constants {
-    object Routes {
-        const val FEATURED_PLAYLISTS = "/v1/browse/featured-playlists"
-        const val CATEGORY_PLAYLISTS = "/v1/browse/categories/{category_id}/playlists"
-        const val HOME_PLAYLISTS = "/v1/browse/home-playlists"
-    }
-}
+object Constants
 
 object Spotify {
     const val API_BASE_URL = "https://api.spotify.com/v1"
@@ -25,15 +19,14 @@ object Spotify {
         const val LIMIT = "limit"
         const val LOCALE = "locale"
         const val OFFSET = "offset"
-
         const val MARKET = "market"
         const val FIELDS = "fields"
         const val ADDITIONAL_TYPES = "additional_types"
     }
 
     object Categories {
-        const val TRENDING = "0JQ5DAqbMKFQIL0AXnG5AK"
-        const val NEW_RELEASES = "0JQ5DAqbMKFz6FAsUtgAab"
         const val CHARTS = "0JQ5DAudkNjCgYMM0TZXDw"
+        const val PARTY = "0JQ5DAqbMKFA6SOHvT3gck"
+        const val TRENDING = "0JQ5DAqbMKFQIL0AXnG5AK"
     }
 }
