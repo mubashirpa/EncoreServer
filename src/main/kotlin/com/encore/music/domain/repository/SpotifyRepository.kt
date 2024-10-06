@@ -1,10 +1,18 @@
 package com.encore.music.domain.repository
 
+import com.encore.music.data.remote.dto.spotify.categories.CategoriesDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
 
 interface SpotifyRepository {
+    suspend fun getCategories(
+        accessToken: String,
+        locale: String? = null,
+        limit: Int = 20,
+        offset: Int = 0,
+    ): CategoriesDto
+
     suspend fun getFeaturedPlaylists(
         accessToken: String,
         locale: String? = null,

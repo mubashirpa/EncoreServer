@@ -1,6 +1,7 @@
 package com.encore.music.data.repository
 
 import com.encore.music.core.Spotify
+import com.encore.music.data.remote.dto.spotify.categories.CategoriesDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
@@ -13,6 +14,23 @@ import io.ktor.http.*
 class SpotifyRepositoryImpl(
     private val httpClient: HttpClient,
 ) : SpotifyRepository {
+    override suspend fun getCategories(
+        accessToken: String,
+        locale: String?,
+        limit: Int,
+        offset: Int,
+    ): CategoriesDto =
+        httpClient
+            .get(Spotify.API_BASE_URL) {
+                url {
+                    appendPathSegments(Spotify.ENDPOINT_GET_CATEGORIES)
+                    locale?.let { parameters.append(Spotify.Parameters.LOCALE, it) }
+                    parameters.append(Spotify.Parameters.LIMIT, limit.toString())
+                    parameters.append(Spotify.Parameters.OFFSET, offset.toString())
+                }
+                authorisationHeader(accessToken)
+            }.body()
+
     override suspend fun getFeaturedPlaylists(
         accessToken: String,
         locale: String?,
@@ -22,7 +40,7 @@ class SpotifyRepositoryImpl(
         httpClient
             .get(Spotify.API_BASE_URL) {
                 url {
-                    appendPathSegments(Spotify.ENDPOINT_FEATURED_PLAYLISTS)
+                    appendPathSegments(Spotify.ENDPOINT_GET_FEATURED_PLAYLISTS)
                     locale?.let { parameters.append(Spotify.Parameters.LOCALE, it) }
                     parameters.append(Spotify.Parameters.LIMIT, limit.toString())
                     parameters.append(Spotify.Parameters.OFFSET, offset.toString())
@@ -39,7 +57,7 @@ class SpotifyRepositoryImpl(
         httpClient
             .get(Spotify.API_BASE_URL) {
                 url {
-                    appendPathSegments(Spotify.ENDPOINT_CATEGORY_PLAYLISTS.replace("{category_id}", categoryId))
+                    appendPathSegments(Spotify.ENDPOINT_GET_CATEGORY_PLAYLISTS.replace("{category_id}", categoryId))
                     parameters.append(Spotify.Parameters.LIMIT, limit.toString())
                     parameters.append(Spotify.Parameters.OFFSET, offset.toString())
                 }

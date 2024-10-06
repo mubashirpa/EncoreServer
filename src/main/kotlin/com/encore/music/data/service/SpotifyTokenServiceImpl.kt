@@ -31,7 +31,7 @@ class SpotifyTokenServiceImpl(
     override suspend fun requestAccessToken(): String {
         val accessTokenDto =
             httpClient
-                .post(Spotify.TOKEN_ENDPOINT_URI) {
+                .post(Spotify.API_TOKEN_URL) {
                     contentType(ContentType.Application.FormUrlEncoded)
                     setBody(
                         FormDataContent(
