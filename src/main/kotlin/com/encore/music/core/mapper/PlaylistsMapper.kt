@@ -28,8 +28,10 @@ fun PlaylistDto.toPlaylistDomainModel(): PlaylistDomainModel =
         description = description,
         id = id,
         image = images?.firstOrNull()?.url,
+        isLocal = false,
         name = name,
         owner = owner?.displayName,
+        ownerId = owner?.id,
         tracks = tracks?.items?.map { it.toTrackDomainModel() },
     )
 
