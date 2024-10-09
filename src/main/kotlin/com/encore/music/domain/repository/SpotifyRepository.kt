@@ -1,5 +1,7 @@
 package com.encore.music.domain.repository
 
+import com.encore.music.data.remote.dto.spotify.artist.ArtistDto
+import com.encore.music.data.remote.dto.spotify.artist.ArtistTracksDto
 import com.encore.music.data.remote.dto.spotify.categories.CategoriesDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
@@ -44,4 +46,15 @@ interface SpotifyRepository {
         offset: Int = 0,
         additionalTypes: String? = null,
     ): TracksPlaylist
+
+    suspend fun getArtist(
+        accessToken: String,
+        artistId: String,
+    ): ArtistDto
+
+    suspend fun getArtistTopTracks(
+        accessToken: String,
+        artistId: String,
+        market: String? = null,
+    ): ArtistTracksDto
 }
