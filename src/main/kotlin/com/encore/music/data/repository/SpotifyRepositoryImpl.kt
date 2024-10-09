@@ -1,6 +1,8 @@
 package com.encore.music.data.repository
 
 import com.encore.music.core.Spotify
+import com.encore.music.data.remote.dto.spotify.artist.ArtistDto
+import com.encore.music.data.remote.dto.spotify.artist.ArtistTracksDto
 import com.encore.music.data.remote.dto.spotify.categories.CategoriesDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
@@ -100,6 +102,32 @@ class SpotifyRepositoryImpl(
                     parameters.append(Spotify.Parameters.LIMIT, limit.toString())
                     parameters.append(Spotify.Parameters.OFFSET, offset.toString())
                     additionalTypes?.let { parameters.append(Spotify.Parameters.ADDITIONAL_TYPES, it) }
+                }
+                authorisationHeader(accessToken)
+            }.body()
+
+    override suspend fun getArtist(
+        accessToken: String,
+        artistId: String,
+    ): ArtistDto =
+        httpClient
+            .get(Spotify.API_BASE_URL) {
+                url {
+                    appendPathSegments(Spotify.ENDPOINT_GET_ARTIST.replace("{artist_id}", artistId))
+                }
+                authorisationHeader(accessToken)
+            }.body()
+
+    override suspend fun getArtistTopTracks(
+        accessToken: String,
+        artistId: String,
+        market: String?,
+    ): ArtistTracksDto =
+        httpClient
+            .get(Spotify.API_BASE_URL) {
+                url {
+                    appendPathSegments(Spotify.ENDPOINT_GET_ARTIST_TOP_TRACKS.replace("{artist_id}", artistId))
+                    market?.let { parameters.append(Spotify.Parameters.MARKET, it) }
                 }
                 authorisationHeader(accessToken)
             }.body()

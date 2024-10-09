@@ -3,6 +3,8 @@ package com.encore.music.core
 object Spotify {
     const val API_BASE_URL = "https://api.spotify.com/v1"
     const val API_TOKEN_URL = "https://accounts.spotify.com/api/token"
+    const val ENDPOINT_GET_ARTIST = "artists/{artist_id}"
+    const val ENDPOINT_GET_ARTIST_TOP_TRACKS = "artists/{artist_id}/top-tracks"
     const val ENDPOINT_GET_CATEGORIES = "browse/categories"
     const val ENDPOINT_GET_CATEGORY_PLAYLISTS = "browse/categories/{category_id}/playlists"
     const val ENDPOINT_GET_FEATURED_PLAYLISTS = "browse/featured-playlists"
