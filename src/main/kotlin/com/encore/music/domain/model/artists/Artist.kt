@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Artist(
+    val followers: Int?,
     val id: String? = null,
     val image: String? = null,
     val name: String? = null,
