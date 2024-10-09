@@ -11,7 +11,7 @@ fun TracksPlaylist.toTrackDomainModelList(): List<TrackDomainModel> = items?.map
 
 fun PlaylistTrack.toTrackDomainModel(): TrackDomainModel =
     TrackDomainModel(
-        artists = track?.artists?.map { it.toArtist() },
+        artists = track?.artists?.map { it.toArtistDomainModel() },
         id = track?.id,
         image =
             track

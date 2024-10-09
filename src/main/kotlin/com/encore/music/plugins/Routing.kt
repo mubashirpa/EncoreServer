@@ -2,6 +2,7 @@ package com.encore.music.plugins
 
 import com.encore.music.domain.repository.SpotifyRepository
 import com.encore.music.domain.service.SpotifyTokenService
+import com.encore.music.routes.artistsRoutes
 import com.encore.music.routes.categoriesRoutes
 import com.encore.music.routes.playlistsRoutes
 import io.ktor.server.application.*
@@ -15,6 +16,10 @@ fun Application.configureRouting() {
 
     routing {
         staticResources("static", "static")
+        artistsRoutes(
+            spotifyTokenService = spotifyTokenService,
+            spotifyRepository = spotifyRepository,
+        )
         categoriesRoutes(
             spotifyTokenService = spotifyTokenService,
             spotifyRepository = spotifyRepository,
