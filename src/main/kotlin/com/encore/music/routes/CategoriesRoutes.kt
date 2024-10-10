@@ -1,6 +1,7 @@
 package com.encore.music.routes
 
 import com.encore.music.core.mapper.toCategoriesDomainModel
+import com.encore.music.core.mapper.toPlaylistsDomainModel
 import com.encore.music.domain.repository.SpotifyRepository
 import com.encore.music.domain.service.SpotifyTokenService
 import io.ktor.http.*
@@ -33,14 +34,22 @@ fun Route.categoriesRoutes(
                     status = HttpStatusCode.BadRequest,
                 )
             val accessToken = spotifyTokenService.getAccessToken()
-            val categoryPlaylists =
-                spotifyRepository
-                    .getCategoryPlaylists(
-                        accessToken = accessToken,
-                        categoryId = categoryId,
-                    )
 
-            call.respond(categoryPlaylists)
+            try {
+                val categoryPlaylists =
+                    spotifyRepository
+                        .getCategoryPlaylists(
+                            accessToken = accessToken,
+                            categoryId = categoryId,
+                        ).toPlaylistsDomainModel()
+                call.respond(categoryPlaylists!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                call.respondText(
+                    text = "An error occurred while processing your request. Please try again later or contact support if the issue persists.",
+                    status = HttpStatusCode.InternalServerError,
+                )
+            }
         }
     }
 }
