@@ -6,6 +6,9 @@ import com.encore.music.data.remote.dto.spotify.categories.CategoriesDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
+import com.encore.music.data.remote.dto.spotify.search.SearchDto
+import com.encore.music.domain.model.search.IncludeExternal
+import com.encore.music.domain.model.search.SearchType
 
 interface SpotifyRepository {
     suspend fun getCategories(
@@ -57,4 +60,14 @@ interface SpotifyRepository {
         artistId: String,
         market: String? = null,
     ): ArtistTracksDto
+
+    suspend fun search(
+        accessToken: String,
+        query: String,
+        type: List<SearchType>,
+        market: String? = null,
+        limit: Int = 20,
+        offset: Int = 0,
+        includeExternal: IncludeExternal? = null,
+    ): SearchDto
 }
