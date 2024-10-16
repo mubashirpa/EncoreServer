@@ -1,7 +1,8 @@
 package com.encore.music.routes
 
+import com.encore.music.core.AuthorizationException
 import com.encore.music.core.mapper.toSearchDomainModel
-import com.encore.music.domain.model.search.IncludeExternal
+import com.encore.music.core.utils.authorizeRequest
 import com.encore.music.domain.repository.SpotifyRepository
 import com.encore.music.domain.service.SpotifyTokenService
 import io.ktor.http.*
@@ -14,6 +15,15 @@ fun Route.searchRoutes(
 ) {
     route("/v1/search") {
         get {
+            try {
+                authorizeRequest()
+            } catch (e: AuthorizationException) {
+                return@get call.respondText(
+                    text = e.message.orEmpty(),
+                    status = e.status,
+                )
+            }
+
             val query =
                 call.parameters["query"] ?: return@get call.respondText(
                     text = "You must specify a query",
@@ -24,37 +34,23 @@ fun Route.searchRoutes(
                     text = "You must specify a type",
                     status = HttpStatusCode.BadRequest,
                 )
-            val accessToken = spotifyTokenService.getAccessToken()
-
             val market = call.parameters["market"]
-            val limit =
-                try {
-                    call.parameters["limit"]?.toInt()
-                } catch (e: NumberFormatException) {
-                    20
-                } ?: 20
-            val offset =
-                try {
-                    call.parameters["offset"]?.toInt()
-                } catch (e: NumberFormatException) {
-                    0
-                } ?: 0
-            val includeExternal =
-                call.parameters["include_external"]?.let {
-                    enumValueOf<IncludeExternal>(it.uppercase())
-                }
+            val limit = call.parameters["limit"]?.toIntOrNull() ?: 20
+            val offset = call.parameters["offset"]?.toIntOrNull() ?: 0
+            val includeExternal = call.parameters["include_external"]
+            val accessToken = spotifyTokenService.getAccessToken()
 
             try {
                 val search =
                     spotifyRepository
                         .search(
-                            accessToken = accessToken,
-                            query = query,
-                            type = type.map { enumValueOf(it.uppercase()) },
-                            market = market,
-                            limit = limit,
-                            offset = offset,
-                            includeExternal = includeExternal,
+                            accessToken,
+                            query,
+                            type.map { enumValueOf(it.uppercase()) },
+                            market,
+                            limit,
+                            offset,
+                            includeExternal,
                         ).toSearchDomainModel()
                 call.respond(search)
             } catch (e: Exception) {

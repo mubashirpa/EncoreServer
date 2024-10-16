@@ -8,7 +8,6 @@ import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
 import com.encore.music.data.remote.dto.spotify.search.SearchDto
-import com.encore.music.domain.model.search.IncludeExternal
 import com.encore.music.domain.model.search.SearchType
 import com.encore.music.domain.repository.SpotifyRepository
 import io.ktor.client.*
@@ -142,7 +141,7 @@ class SpotifyRepositoryImpl(
         market: String?,
         limit: Int,
         offset: Int,
-        includeExternal: IncludeExternal?,
+        includeExternal: String?,
     ): SearchDto =
         httpClient
             .get(Spotify.API_BASE_URL) {
@@ -156,7 +155,7 @@ class SpotifyRepositoryImpl(
                     market?.let { parameters.append(Spotify.Parameters.MARKET, it) }
                     parameters.append(Spotify.Parameters.LIMIT, limit.toString())
                     parameters.append(Spotify.Parameters.OFFSET, offset.toString())
-                    includeExternal?.let { parameters.append(Spotify.Parameters.INCLUDE_EXTERNAL, it.name.lowercase()) }
+                    includeExternal?.let { parameters.append(Spotify.Parameters.INCLUDE_EXTERNAL, it) }
                 }
                 authorisationHeader(accessToken)
             }.body()

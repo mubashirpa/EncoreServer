@@ -7,7 +7,6 @@ import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
 import com.encore.music.data.remote.dto.spotify.search.SearchDto
-import com.encore.music.domain.model.search.IncludeExternal
 import com.encore.music.domain.model.search.SearchType
 
 interface SpotifyRepository {
@@ -68,6 +67,6 @@ interface SpotifyRepository {
         market: String? = null,
         limit: Int = 20,
         offset: Int = 0,
-        includeExternal: IncludeExternal? = null,
+        includeExternal: String? = null,
     ): SearchDto
 }

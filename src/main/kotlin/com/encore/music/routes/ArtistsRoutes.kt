@@ -1,7 +1,9 @@
 package com.encore.music.routes
 
+import com.encore.music.core.AuthorizationException
 import com.encore.music.core.mapper.toArtistDomainModel
 import com.encore.music.core.mapper.toTrackDomainModelList
+import com.encore.music.core.utils.authorizeRequest
 import com.encore.music.domain.repository.SpotifyRepository
 import com.encore.music.domain.service.SpotifyTokenService
 import io.ktor.http.*
@@ -15,6 +17,15 @@ fun Route.artistsRoutes(
     route("/v1/artists") {
         route("/{artist_id}") {
             get {
+                try {
+                    authorizeRequest()
+                } catch (e: AuthorizationException) {
+                    return@get call.respondText(
+                        text = e.message.orEmpty(),
+                        status = e.status,
+                    )
+                }
+
                 val artistId =
                     call.parameters["artist_id"] ?: return@get call.respondText(
                         text = "You must specify a artist id",
@@ -34,16 +45,26 @@ fun Route.artistsRoutes(
                 }
             }
             get("/top-tracks") {
+                try {
+                    authorizeRequest()
+                } catch (e: AuthorizationException) {
+                    return@get call.respondText(
+                        text = e.message.orEmpty(),
+                        status = e.status,
+                    )
+                }
+
                 val artistId =
                     call.parameters["artist_id"] ?: return@get call.respondText(
                         text = "You must specify a artist id",
                         status = HttpStatusCode.BadRequest,
                     )
+                val market = call.parameters["market"]
                 val accessToken = spotifyTokenService.getAccessToken()
 
                 try {
                     val artistTopTracks =
-                        spotifyRepository.getArtistTopTracks(accessToken, artistId).toTrackDomainModelList()
+                        spotifyRepository.getArtistTopTracks(accessToken, artistId, market).toTrackDomainModelList()
                     val artist = spotifyRepository.getArtist(accessToken, artistId).toArtistDomainModel(artistTopTracks)
                     call.respond(artist)
                 } catch (e: Exception) {
