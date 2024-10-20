@@ -4,7 +4,7 @@ import com.encore.music.core.AuthorizationException
 import com.encore.music.core.Spotify
 import com.encore.music.core.mapper.toPlaylistDomainModel
 import com.encore.music.core.mapper.toPlaylistDomainModelList
-import com.encore.music.core.mapper.toTrackDomainModelList
+import com.encore.music.core.mapper.toTracksDomainModel
 import com.encore.music.core.utils.authorizeRequest
 import com.encore.music.domain.model.home.HomePlaylist
 import com.encore.music.domain.repository.SpotifyRepository
@@ -69,7 +69,7 @@ fun Route.playlistsRoutes(
                     status = HttpStatusCode.BadRequest,
                 )
             val market = call.parameters["market"]
-            val fields = "items(track(id,name,preview_url,album.images(url),artists(id,name)))"
+            val fields = "limit,offset,total,items(track(id,name,preview_url,album.images(url),artists(id,name)))"
             val limit = call.parameters["limit"]?.toIntOrNull() ?: 20
             val offset = call.parameters["offset"]?.toIntOrNull() ?: 0
             val additionalTypes = call.parameters["additional_types"]
@@ -86,7 +86,7 @@ fun Route.playlistsRoutes(
                             limit,
                             offset,
                             additionalTypes,
-                        ).toTrackDomainModelList()
+                        ).toTracksDomainModel()
                 call.respond(playlistItems)
             } catch (e: Exception) {
                 e.printStackTrace()

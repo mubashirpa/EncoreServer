@@ -7,8 +7,17 @@ import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
 import com.encore.music.domain.model.playlists.Playlist as PlaylistDomainModel
 import com.encore.music.domain.model.playlists.Playlists as PlaylistsDomainModel
 import com.encore.music.domain.model.tracks.Track as TrackDomainModel
+import com.encore.music.domain.model.tracks.Tracks as TracksDomainModel
 
 fun TracksPlaylist.toTrackDomainModelList(): List<TrackDomainModel> = items?.map { it.toTrackDomainModel() }.orEmpty()
+
+fun TracksPlaylist.toTracksDomainModel(): TracksDomainModel =
+    TracksDomainModel(
+        limit = limit,
+        offset = offset,
+        total = total,
+        items = items?.map { it.toTrackDomainModel() },
+    )
 
 fun PlaylistTrack.toTrackDomainModel(): TrackDomainModel =
     TrackDomainModel(
