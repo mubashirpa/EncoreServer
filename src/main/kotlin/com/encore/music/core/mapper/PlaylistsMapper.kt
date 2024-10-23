@@ -3,13 +3,12 @@ package com.encore.music.core.mapper
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistDto
 import com.encore.music.data.remote.dto.spotify.playlist.PlaylistTrack
 import com.encore.music.data.remote.dto.spotify.playlist.TracksPlaylist
+import com.encore.music.data.remote.dto.spotify.playlists.Playlists
 import com.encore.music.data.remote.dto.spotify.playlists.PlaylistsDto
 import com.encore.music.domain.model.playlists.Playlist as PlaylistDomainModel
 import com.encore.music.domain.model.playlists.Playlists as PlaylistsDomainModel
 import com.encore.music.domain.model.tracks.Track as TrackDomainModel
 import com.encore.music.domain.model.tracks.Tracks as TracksDomainModel
-
-fun TracksPlaylist.toTrackDomainModelList(): List<TrackDomainModel> = items?.map { it.toTrackDomainModel() }.orEmpty()
 
 fun TracksPlaylist.toTracksDomainModel(): TracksDomainModel =
     TracksDomainModel(
@@ -56,3 +55,11 @@ fun PlaylistsDto.toPlaylistsDomainModel(): PlaylistsDomainModel? =
             items = items?.map { it.toPlaylistDomainModel() },
         )
     }
+
+fun Playlists.toPlaylistsDomainModel(): PlaylistsDomainModel =
+    PlaylistsDomainModel(
+        limit = limit,
+        offset = offset,
+        total = total,
+        items = items?.map { it.toPlaylistDomainModel() },
+    )

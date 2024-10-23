@@ -5,7 +5,7 @@ import com.encore.music.domain.model.search.Search as SearchDomainModel
 
 fun SearchDto.toSearchDomainModel(): SearchDomainModel =
     SearchDomainModel(
-        tracks = tracks?.items?.map { it.toTrackDomainModel() },
-        artists = artists?.items?.map { it.toArtistDomainModel() },
-        playlists = playlists?.items?.map { it.toPlaylistDomainModel() },
+        tracks = tracks?.toTracksDomainModel(),
+        artists = artists?.toArtistsDomainModel(),
+        playlists = playlists?.toPlaylistsDomainModel(),
     )
