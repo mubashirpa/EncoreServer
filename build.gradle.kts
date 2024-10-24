@@ -31,4 +31,5 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.koin)
     implementation(libs.firebase.admin)
+    implementation(libs.kotlinx.coroutines.core)
 }

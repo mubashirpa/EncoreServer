@@ -1,9 +1,10 @@
 [versions]
-ktor-version = "3.0.0-rc-1"
+ktor-version = "3.0.0"
 kotlin-version = "2.0.20"
-logback-version = "1.5.8"
+logback-version = "1.5.11"
 koin-version = "4.0.0"
-firebase-admin = "9.3.0"
+firebase-admin = "9.4.1"
+kotlinx-coroutines = "1.9.0"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor-version" }
@@ -21,6 +22,7 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin-version" }
 koin-logger-slf4j = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin-version" }
 firebase-admin = { module = "com.google.firebase:firebase-admin", version.ref = "firebase-admin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 [bundles]
 ktor-client = [
