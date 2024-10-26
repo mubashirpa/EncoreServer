@@ -7,11 +7,15 @@ import com.encore.music.core.mapper.toPlaylistDomainModelList
 import com.encore.music.core.mapper.toTracksDomainModel
 import com.encore.music.core.utils.authorizeRequest
 import com.encore.music.domain.model.home.HomePlaylist
+import com.encore.music.domain.model.playlists.Playlist
 import com.encore.music.domain.repository.SpotifyRepository
 import com.encore.music.domain.service.SpotifyTokenService
 import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 fun Route.playlistsRoutes(
     spotifyTokenService: SpotifyTokenService,
@@ -113,38 +117,40 @@ fun Route.playlistsRoutes(
             val offset = call.parameters["offset"]?.toIntOrNull() ?: 0
             val accessToken = spotifyTokenService.getAccessToken()
 
-            try {
-                val featuredPlaylists =
+            suspend fun fetchPlaylists(category: String): List<Playlist> =
+                try {
                     spotifyRepository
-                        .getFeaturedPlaylists(accessToken, locale, limit, offset)
+                        .getCategoryPlaylists(accessToken, category, limit, offset)
                         .toPlaylistDomainModelList()
-                val trendingPlaylists =
-                    spotifyRepository
-                        .getCategoryPlaylists(accessToken, Spotify.Categories.TRENDING, limit, offset)
-                        .toPlaylistDomainModelList()
-                val partyPlaylists =
-                    spotifyRepository
-                        .getCategoryPlaylists(accessToken, Spotify.Categories.PARTY, limit, offset)
-                        .toPlaylistDomainModelList()
-                val chartsPlaylists =
-                    spotifyRepository
-                        .getCategoryPlaylists(accessToken, Spotify.Categories.CHARTS, limit, offset)
-                        .toPlaylistDomainModelList()
+                } catch (e: Exception) {
+                    emptyList()
+                }
 
-                val homePlaylists: MutableList<HomePlaylist> = mutableListOf()
-                homePlaylists.add(HomePlaylist(title = "Popular", playlists = featuredPlaylists))
-                homePlaylists.add(HomePlaylist(title = "Trending", playlists = trendingPlaylists))
-                homePlaylists.add(HomePlaylist(title = "Party", playlists = partyPlaylists))
-                homePlaylists.add(HomePlaylist(title = "Top Charts", playlists = chartsPlaylists))
-
-                call.respond(homePlaylists)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                call.respondText(
-                    text = "An error occurred while processing your request. Please try again later or contact support if the issue persists.",
-                    status = HttpStatusCode.InternalServerError,
-                )
-            }
+            val homePlaylists =
+                coroutineScope {
+                    listOf(
+                        async {
+                            spotifyRepository
+                                .getFeaturedPlaylists(accessToken, locale, limit, offset)
+                                .toPlaylistDomainModelList()
+                        },
+                        async { fetchPlaylists(Spotify.Categories.TRENDING) },
+                        async { fetchPlaylists(Spotify.Categories.PARTY) },
+                        async { fetchPlaylists(Spotify.Categories.CHARTS) },
+                    ).awaitAll()
+                }.mapIndexed { index, playlists ->
+                    HomePlaylist(title = getTitleByIndex(index), playlists = playlists)
+                }
+            call.respond(homePlaylists)
         }
     }
 }
+
+private fun getTitleByIndex(index: Int): String =
+    when (index) {
+        0 -> "Popular"
+        1 -> "Trending"
+        2 -> "Party"
+        3 -> "Top Charts"
+        else -> "Unknown"
+    }
