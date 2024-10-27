@@ -33,9 +33,3 @@ dependencies {
     implementation(libs.firebase.admin)
     implementation(libs.kotlinx.coroutines.core)
 }
-
-ktor {
-    docker {
-        jreVersion.set(JavaVersion.VERSION_17)
-    }
-}
