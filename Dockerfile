@@ -1,8 +1,10 @@
 # Stage 1: Cache Gradle dependencies
 FROM gradle:latest AS cache
 RUN mkdir -p /home/gradle/cache_home
-ENV GRADLE_USER_HOME /home/gradle/cache_home
+ENV GRADLE_USER_HOME=/home/gradle/cache_home
 COPY build.gradle.* gradle.properties /home/gradle/app/
+COPY gradle/libs.versions.toml /home/gradle/app/gradle/
+COPY src/main/resources/encore-music-player-firebase-adminsdk.json /home/gradle/app/src/main/resources/
 WORKDIR /home/gradle/app
 RUN gradle clean build -i --stacktrace
 
