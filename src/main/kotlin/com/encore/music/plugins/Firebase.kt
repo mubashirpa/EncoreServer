@@ -5,10 +5,11 @@ package com.encore.music.plugins
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
-import java.io.FileInputStream
+import io.ktor.server.application.*
 
-fun configureFirebase() {
-    val refreshToken = FileInputStream("src/main/resources/encore-music-player-firebase-adminsdk.json")
+fun Application.configureFirebase() {
+    val classLoader = this::class.java.classLoader
+    val refreshToken = classLoader.getResourceAsStream("encore-music-player-firebase-adminsdk.json")
 
     val options =
         FirebaseOptions
