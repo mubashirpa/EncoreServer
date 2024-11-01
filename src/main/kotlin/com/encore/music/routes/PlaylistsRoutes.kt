@@ -39,7 +39,7 @@ fun Route.playlistsRoutes(
                 )
             val market = call.parameters["market"]
             val fields =
-                "description,id,images.url,name,owner(id,display_name),tracks.items(track(id,name,preview_url,album.images(url),artists(id,name)))"
+                "description,id,images.url,name,external_urls.spotify,owner(id,display_name),tracks.items(track(id,name,preview_url,external_urls.spotify,album.images(url),artists(id,name)))"
             val additionalTypes = call.parameters["additional_types"]
             val accessToken = spotifyTokenService.getAccessToken()
 
@@ -73,7 +73,8 @@ fun Route.playlistsRoutes(
                     status = HttpStatusCode.BadRequest,
                 )
             val market = call.parameters["market"]
-            val fields = "limit,offset,total,items(track(id,name,preview_url,album.images(url),artists(id,name)))"
+            val fields =
+                "limit,offset,total,items(track(id,name,preview_url,external_urls.spotify,album.images(url),artists(id,name)))"
             val limit = call.parameters["limit"]?.toIntOrNull() ?: 20
             val offset = call.parameters["offset"]?.toIntOrNull() ?: 0
             val additionalTypes = call.parameters["additional_types"]

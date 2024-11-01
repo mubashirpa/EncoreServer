@@ -9,6 +9,7 @@ import com.encore.music.domain.model.tracks.Track as TrackDomainModel
 
 fun ArtistDto.toArtistDomainModel(tracks: List<TrackDomainModel>? = null): ArtistDomainModel =
     ArtistDomainModel(
+        externalUrl = externalUrls?.spotify,
         followers = followers?.total,
         id = id,
         image = images?.firstOrNull()?.url,

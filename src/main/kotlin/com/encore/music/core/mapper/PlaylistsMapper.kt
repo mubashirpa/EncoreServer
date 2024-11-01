@@ -21,6 +21,7 @@ fun TracksPlaylist.toTracksDomainModel(): TracksDomainModel =
 fun PlaylistTrack.toTrackDomainModel(): TrackDomainModel =
     TrackDomainModel(
         artists = track?.artists?.map { it.toArtistDomainModel() },
+        externalUrl = track?.externalUrls?.spotify,
         id = track?.id,
         image =
             track
@@ -35,6 +36,7 @@ fun PlaylistTrack.toTrackDomainModel(): TrackDomainModel =
 fun PlaylistDto.toPlaylistDomainModel(): PlaylistDomainModel =
     PlaylistDomainModel(
         description = description,
+        externalUrl = externalUrls?.spotify,
         id = id,
         image = images?.firstOrNull()?.url,
         isLocal = false,
