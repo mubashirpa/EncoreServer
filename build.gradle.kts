@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.encore.music"
-version = "0.0.1"
+version = "0.0.2"
 
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
@@ -32,4 +32,15 @@ dependencies {
     implementation(libs.bundles.koin)
     implementation(libs.firebase.admin)
     implementation(libs.kotlinx.coroutines.core)
+}
+
+ktor {
+    docker {
+        jreVersion.set(JavaVersion.VERSION_17)
+        localImageName.set("encore")
+        imageTag.set("0.0.2")
+    }
+    fatJar {
+        archiveFileName.set("encore.jar")
+    }
 }
