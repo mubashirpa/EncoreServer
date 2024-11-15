@@ -38,7 +38,7 @@ ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_17)
         localImageName.set("encore")
-        imageTag.set("0.0.2")
+        imageTag.set("$version")
     }
     fatJar {
         archiveFileName.set("encore.jar")
